@@ -6,7 +6,6 @@ REMOTE_WRITE_URL="http://victoriametrics.railway.internal:8428/api/v1/write"
 
 mkdir -p /etc/vmagent
 
-
 cat > "$CONFIG_FILE" <<EOF
 global:
   scrape_interval: ${SCRAPE_INTERVAL:-15s}
@@ -18,17 +17,14 @@ scrape_configs:
 EOF
 
 if [ -n "$SCRAPE_TARGETS" ]; then
-    echo "" >> "$CONFIG_FILE"
-    IFS=',' read -ra TARGETS <<< "$SCRAPE_TARGETS"
-    for target in $SCRAPE_TARGETS; do
-        # Split by colon - format is "jobname:url"
+    echo "$SCRAPE_TARGETS" | tr ',' '\n' | while read -r target; do
         job=$(echo "$target" | cut -d':' -f1)
-        url=$(echo "$target" | cut -d':' -f2-)
+        host_port=$(echo "$target" | cut -d':' -f2-)
         
         cat >> "$CONFIG_FILE" <<EOF
   - job_name: '${job}'
     static_configs:
-      - targets: ['${url}']
+      - targets: ['${host_port}']
 EOF
     done
 fi
@@ -42,4 +38,3 @@ exec /vmagent-prod \
     -promscrape.config="$CONFIG_FILE" \
     -remoteWrite.url="$REMOTE_WRITE_URL" \
     -httpListenAddr=:8429
-
