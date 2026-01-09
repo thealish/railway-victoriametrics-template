@@ -1,15 +1,54 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
-  "build": {
-    "builder": "DOCKERFILE",
-    "dockerfilePath": "Dockerfile"
-  },
-  "deploy": {
-    "startCommand": "/victoria-metrics-prod -storageDataPath=/data -httpListenAddr=:8428 -retentionPeriod=${RETENTION_PERIOD:-1} -search.latencyOffset=${SEARCH_LATENCY_OFFSET:-30s} -search.maxUniqueTimeseries=${MAX_UNIQUE_TIMESERIES:-300000}",
-    "healthcheckPath": "/health",
-    "healthcheckTimeout": 100,
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10,
-    "volumes": ["/data"]
-  }
+  "name": "VictoriaMetrics Monitoring Stack",
+  "description": "Complete monitoring stack: VictoriaMetrics, vmagent, Grafana, and auth proxy",
+  "services": [
+    {
+      "name": "victoriametrics",
+      "source": {
+        "repo": "thealish/railway-vmmetrics-template",
+        "rootDirectory": "victoriametrics"
+      },
+      "variables": {
+        "RETENTION_PERIOD": "1",
+        "SEARCH_LATENCY_OFFSET": "30s",
+        "MAX_UNIQUE_TIMESERIES": "300000"
+      }
+    },
+    {
+      "name": "vmagent",
+      "source": {
+        "repo": "thealish/railway-vmmetrics-template",
+        "rootDirectory": "vmagent"
+      },
+      "variables": {
+        "SCRAPE_INTERVAL": "15s"
+      }
+    },
+    {
+      "name": "grafana",
+      "source": {
+        "repo": "thealish/railway-vmmetrics-template",
+        "rootDirectory": "grafana"
+      },
+      "variables": {
+        "GF_SECURITY_ADMIN_USER": "admin",
+        "GF_SECURITY_ADMIN_PASSWORD": {
+          "generator": "secret"
+        }
+      }
+    },
+    {
+      "name": "auth-proxy",
+      "source": {
+        "repo": "thealish/railway-vmmetrics-template",
+        "rootDirectory": "auth-proxy"
+      },
+      "variables": {
+        "API_KEY": {
+          "generator": "secret"
+        }
+      }
+    }
+  ]
 }
