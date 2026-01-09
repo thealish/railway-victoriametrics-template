@@ -1,6 +1,6 @@
 # VictoriaMetrics Monitoring Stack
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/YOUR_TEMPLATE_ID)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/m0dW7Z?referralCode=SFBbxC&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 Complete monitoring stack on Railway: metrics collection, storage, and visualization.
 
