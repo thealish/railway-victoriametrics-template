@@ -2,7 +2,7 @@ FROM victoriametrics/victoria-metrics:latest
 
 EXPOSE 8428
 
-VOLUME ["/data"]
+# Volume configured via railway.json
 
 CMD ["/victoria-metrics-prod", \
      "-storageDataPath=/data", \
