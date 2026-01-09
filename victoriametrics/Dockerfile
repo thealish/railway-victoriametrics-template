@@ -1,4 +1,4 @@
-FROM victoriametrics/victoria-metrics:v1.96.0
+FROM victoriametrics/victoria-metrics:latest
 
 EXPOSE 8428
 
